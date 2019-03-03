@@ -30,6 +30,21 @@ BLYNK_WRITE(V4)
   }
 }
 
+BLYNK_WRITE(V5)
+{
+  int state = param.asInt();
+
+  if(state==1)
+  {
+    blinking(2000,250,8);
+  }
+
+  else
+  {
+    breathe(2, 5, 0, 255, 0, 100);
+  }
+}
+
 void setup()
 {
 
@@ -132,3 +147,26 @@ void blinking(int ontime, int offtime, int loopCount)
   
   }  
 }
+
+void breathe(int LEDs, int stepDelay, int R, int G, int B, int count)
+{
+    float MaximumBrightness = 255;
+    float SpeedFactor = 0.008; // I don't actually know what would look good
+
+    // Make the lights breathe
+    for (int i = 0; i < 65535; i++)
+    {
+    // Intensity will go from 10 - MaximumBrightness in a "breathing" manner
+    float intensity = MaximumBrightness /2.0 * (1.0 + sin(SpeedFactor * i));
+    pixels.setBrightness(intensity);
+    // Now set every LED to that color
+    for (int ledNumber=0; ledNumber<LEDs; ledNumber++)
+    {
+    pixels.setPixelColor(ledNumber, R, G, B);
+    }
+
+    pixels.show();
+    //Wait a bit before continuing to breathe
+    delay(stepDelay);
+    }
+ }
